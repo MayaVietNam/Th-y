@@ -1,5 +1,5 @@
 /* ============ CẤU HÌNH API GOOGLE APPS SCRIPT ============ */
-const GAS_WEB_APP_URL = 'ĐIỀN_LINK_WEB_APP_URL_CỦA_BẠN_VÀO_ĐÂY'; // Sẽ lấy ở bước cuối cùng
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyHwNxa8k20A0mQIT-JW58RwiZ160sAzX9sdyWnfAxM-ouHqaDip3V9emG8Lev2I5Bm/exec'; // Sẽ lấy ở bước cuối cùng
 
 /* ============ LƯU TRỮ VÀ API ============ */
 const $=id=>document.getElementById(id);
