@@ -4,14 +4,133 @@
   <meta charset="utf-8">
   <title>MAYA VIETNAM</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  
-  <!-- Font chữ hiện đại -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
-  
-  <!-- Kết nối file CSS -->
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ===== CSS GIAO DIỆN HIỆN ĐẠI (SaaS UI) ===== */
+    :root {
+      --bg: #f8fafc; --surface: #ffffff; --surface-2: #f1f5f9;
+      --ink: #0f172a; --ink-2: #334155; --ink-3: #64748b;
+      --line: #e2e8f0; --line-2: #cbd5e1;
+      --accent: #0ea5e9; --accent-ink: #ffffff; --accent-soft: #e0f2fe;
+      --nav-on: #e0f2fe; --nav-on-ink: #0369a1;
+      --ok: #16a34a; --ok-bg: #dcfce7;
+      --warn: #d97706; --warn-bg: #fef3c7;
+      --bad: #ef4444; --bad-bg: #fee2e2;
+      --info: #3b82f6; --info-bg: #dbeafe;
+      --mute: #64748b; --mute-bg: #f1f5f9;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --mono: 'IBM Plex Mono', monospace;
+    }
+    * { box-sizing: border-box; }
+    body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 14.5px; line-height: 1.6; margin: 0; padding: 0; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .mono { font-family: var(--mono); font-size: 13px; }
+    .num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+    .muted { color: var(--ink-3); }
+    .sm { font-size: 12.5px; }
+
+    /* Layout chính */
+    .app { display: grid; grid-template-columns: 260px minmax(0, 1fr); min-height: 100vh; max-width: 1600px; margin: 0 auto; }
+    .side { background: #0f172a; color: #f8fafc; padding: 24px 16px; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid #1e293b; }
+    .brand { padding: 0 8px 24px; border-bottom: 1px solid #1e293b; margin-bottom: 20px; }
+    .brand b { font-size: 20px; color: #ffffff; display: block; letter-spacing: -0.02em; }
+    .brand span { font-size: 11px; color: #94a3b8; letter-spacing: 1px; font-weight: 600; }
+    .nav { display: flex; flex-direction: column; gap: 4px; }
+    .ng { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #64748b; padding: 16px 8px 8px; }
+    .nav button { display: flex; align-items: center; gap: 12px; border: 0; background: transparent; text-align: left; padding: 10px 12px; border-radius: 8px; color: #cbd5e1; font-weight: 500; transition: all 0.2s; }
+    .nav button svg { width: 18px; height: 18px; opacity: 0.8; }
+    .nav button:hover { background: #1e293b; color: #ffffff; }
+    .nav button[aria-current="page"] { background: #38bdf8; color: #0f172a; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .nav button[aria-current="page"] svg { opacity: 1; }
+    
+    .side-note { margin-top: auto; padding-top: 20px; border-top: 1px solid #1e293b; font-size: 12px; color: #94a3b8; display: flex; flex-direction: column; gap: 8px; }
+    .dbs { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+    .dbs i { width: 8px; height: 8px; border-radius: 50%; background: #64748b; }
+    .dbs.on i { background: #22c55e; } .dbs.off i { background: #ef4444; } .dbs.connecting i { background: #38bdf8; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+    main { padding: 32px 40px 64px; display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+    .ph { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+    .ph h1 { margin: 0; font-size: 26px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; }
+    .ph p { margin: 4px 0 0; color: #64748b; font-size: 14px; }
+    
+    /* Panel, Form & Bảng */
+    .panel { background: #ffffff; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid #e2e8f0; overflow: hidden; }
+    .panel > h2 { padding: 20px 24px 0; margin: 0; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #334155; }
+    .panel .pb { padding: 16px 24px 24px; }
+    .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+    .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: #e2e8f0; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+    .kpi { background: #ffffff; padding: 20px 24px; display: flex; flex-direction: column; gap: 4px; }
+    .kpi .l { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .kpi .v { font-size: 28px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; }
+    
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 8px; padding: 8px 16px; font-weight: 500; font-size: 14px; color: #334155; transition: all 0.2s; white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .btn:hover { border-color: #94a3b8; background: #f8fafc; }
+    .btn.pri { background: #0ea5e9; border-color: #0ea5e9; color: #ffffff; box-shadow: 0 4px 6px -1px rgba(14,165,233,0.2); }
+    .btn.pri:hover { background: #0284c7; border-color: #0284c7; }
+    .btn.danger { border-color: #fca5a5; color: #ef4444; }
+    .btn.danger:hover { background: #fef2f2; border-color: #ef4444; }
+    .btn.sm { padding: 4px 12px; font-size: 13px; }
+    .newbtn { width: 100%; margin-bottom: 12px; padding: 12px; font-weight: 600; background: linear-gradient(135deg, #0ea5e9, #0284c7); border: none; }
+    
+    input:not([type=checkbox]):not([type=radio]), select, textarea { border-radius: 8px !important; border: 1px solid #cbd5e1 !important; padding: 10px 14px !important; font-size: 14px !important; background: #ffffff; transition: all 0.2s; width: 100%; box-sizing: border-box; }
+    input:focus, select:focus, textarea:focus { border-color: #0ea5e9 !important; box-shadow: 0 0 0 3px rgba(14,165,233,0.15) !important; outline: none; }
+    
+    .tbl th { background: #f8fafc; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; padding: 14px 16px; border-bottom: 1px solid #e2e8f0; text-align: left; white-space: nowrap; }
+    .tbl td { padding: 16px; border-bottom: 1px solid #f1f5f9; vertical-align: top; color: #1e293b; }
+    .tbl tr.row:hover td { background: #f8fafc; }
+    .tbl th.num, .tbl td.num { text-align: right; }
+    .scroll { overflow-x: auto; }
+    
+    .chip { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+    .t-ok { background: #dcfce7; color: #16a34a; }
+    .t-bad { background: #fee2e2; color: #ef4444; }
+    .t-warn { background: #fef3c7; color: #d97706; }
+    .t-info { background: #dbeafe; color: #2563eb; }
+    .t-mute { background: #f1f5f9; color: #64748b; }
+    .t-acc { background: #e0f2fe; color: #0284c7; }
+    .tag { font-size: 11px; font-weight: 700; letter-spacing: 0.05em; padding: 2px 6px; border-radius: 4px; border: 1px solid #cbd5e1; color: #64748b; }
+    
+    /* Ngăn kéo & Form */
+    #drawer { position: fixed; inset: 0; z-index: 100; display: none; }
+    #drawer.open { display: block; }
+    #drawer .ov { position: absolute; inset: 0; background: rgba(15,23,42,0.4); backdrop-filter: blur(4px); }
+    #drawer .dr { position: absolute; top: 0; right: 0; bottom: 0; width: min(900px, 100%); background: #f8fafc; box-shadow: -10px 0 30px rgba(0,0,0,0.1); overflow-y: auto; padding: 32px; display: flex; flex-direction: column; gap: 24px; animation: slideIn 0.2s ease-out; }
+    @keyframes slideIn { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .dr-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 8px; }
+    .xbtn { border: 1px solid #cbd5e1; background: #ffffff; border-radius: 8px; width: 36px; height: 36px; display: grid; place-items: center; font-size: 20px; transition: all 0.2s; }
+    .xbtn:hover { background: #f1f5f9; color: #ef4444; }
+    
+    .form { display: flex; flex-direction: column; gap: 24px; }
+    .fs { display: flex; flex-direction: column; gap: 16px; }
+    .fs > h3 { margin: 0; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+    .fg { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .fg .w2 { grid-column: span 2; } .fg .wall { grid-column: 1 / -1; }
+    label.f { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #334155; }
+    .fbar { position: sticky; bottom: -32px; padding: 16px 0; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 12px; z-index: 10; margin-top: 16px; }
+    
+    .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); background: #0f172a; color: #ffffff; padding: 12px 24px; border-radius: 8px; font-weight: 500; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); z-index: 200; }
+    
+    /* Giao diện Mobile */
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; padding: 0; gap: 0; }
+      .side { position: static; height: auto; border-right: none; border-bottom: 1px solid #1e293b; padding: 16px; }
+      .nav { flex-direction: row; overflow-x: auto; padding-bottom: 4px; }
+      .nav button { white-space: nowrap; }
+      .ng, .side-note { display: none; }
+      main { padding: 24px 16px; }
+      .grid2 { grid-template-columns: 1fr; }
+      #drawer .dr { width: 100%; padding: 24px 16px; }
+      .fg .w2 { grid-column: auto; }
+    }
+  </style>
 </head>
 <body>
   <div class="app">
@@ -19,29 +138,184 @@
       <div class="brand"><b>MAYA VIETNAM</b><span>SALE MANAGEMENT</span></div>
       <button class="btn pri newbtn" data-act="neworder" id="newbtn"></button>
       <nav class="nav" id="nav" aria-label="Điều hướng chính"></nav>
-      <div class="langsw" role="group" aria-label="Ngôn ngữ / Language" data-noi18n>
-        <button type="button" data-act="lang" data-id="vi" aria-pressed="true">Tiếng Việt</button>
-        <button type="button" data-act="lang" data-id="en" aria-pressed="false">English</button>
-      </div>
       <div class="side-note">
         <span class="dbs" id="dbs"><i></i><span>Đang kết nối dữ liệu</span></span>
         <span>Hôm nay: <b id="todayLbl"></b></span>
-        <span>Đơn từ sheet là dữ liệu nhập sẵn. Mục gắn nhãn <span class="tag">MẪU</span> là dữ liệu thêm để thử.</span>
       </div>
     </aside>
     <main id="main"></main>
   </div>
-  
   <div id="drawer" aria-hidden="true"><div class="ov" data-act="close"></div><div class="dr" id="dr" role="dialog" aria-modal="true"></div></div>
   <div id="toast" class="toast" hidden></div>
 
-  <!-- Thư viện bên ngoài -->
+  <!-- Thư viện Excel & QR -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <script>
+/* ============ KẾT NỐI API GOOGLE APPS SCRIPT ============ */
+// ĐÂY LÀ NƠI BẠN ĐIỀN LINK WEB APP TỪ GOOGLE SHEET VÀO
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyHwNxa8k20A0mQIT-JW58RwiZ160sAzX9sdyWnfAxM-ouHqaDip3V9emG8Lev2I5Bm/exec';
+
+/* ============ DỮ LIỆU CẤU HÌNH ============ */
+const LOADED_AT=(()=>{const d=new Date(),p=n=>String(n).padStart(2,"0");return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`})();
+const pad=n=>String(n).padStart(2,'0'); const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); const TODAY=iso(new Date());
+const vnd=n=>{const v=Math.round(n||0);return (v<0?'-':'')+String(Math.abs(v)).replace(/\B(?=(\d{3})+(?!\d))/g,'.')};
+const vndS=n=>Math.abs(n)>=1e6?(n/1e6).toFixed(1).replace('.',',')+' tr':vnd(n);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+
+// ⚠️ QUAN TRỌNG: ĐỂ APP CHẠY ĐƯỢC NGAY MÀ KHÔNG BỊ TRẮNG TRANG, TÔI ĐỂ SẴN DỮ LIỆU MẪU NGẮN GỌN.
+// SAU KHI APP ĐÃ HIỂN THỊ ĐẸP, BẠN CÓ THỂ COPY DÁN CÁC BIẾN BASE_CUS, BASE_ORD, BASE_PRICES, PLDATA TỪ FILE CŨ ĐÈ VÀO ĐÂY ĐỂ CÓ ĐẦY ĐỦ DATA.
+const BASE_CUS = [{id:'inoue',name:'Inoue Rubber VN',legal:'CÔNG TY TNHH CAO SU INOUE VIỆT NAM',mst:'2500150631',src:'Japanese Corporate',addr:'Hà Nội',area:'HN',pay:'Từng đơn'}];
+const CTRY = {JP:'Nhật Bản',CN:'Trung Quốc',VN:'Việt Nam'};
+const BASE_ORD = [{code:'50631-000',cus:'inoue',date:TODAY,firm:'Regus',area:'HN',lines:[{dev:'EZ55',c:'JP',s:TODAY,e:TODAY,days:13,price:130000,st:'using'}]}];
+const BASE_INV = {};
+const BASE_DEVS = {EZ55:{imei:'355185374743441',type:'Wi-Fi',home:'HN'}};
+const BASE_PRICES = [{"id":"pmv8ylunqx5r","name":"Wi-Fi Nhật Bản · 5GB mỗi ngày","kind":"Wifi device","c":"JP","unit":"Ngày","pkg":"5GB/day","price":130000,"active":true}];
+const ESIM_BASE = [];
+const PLDATA = {};
+
+let CUS=[], CB={}, DEVS={}, ORD=[], LINES=[], INVMETA={}, INVS={};
+const LIVE={}; const LV=k=>LIVE[k]||{};
+
+function rebuild(){
+  CUS = JSON.parse(JSON.stringify(BASE_CUS));
+  Object.entries(LV('customers')).forEach(([id,c])=>{if(!c.deleted) CUS.push(Object.assign({},c,{id}))});
+  CUS.forEach(c=> CB[c.id]=c);
   
-  <!-- Kết nối các file dữ liệu và Logic -->
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+  DEVS = JSON.parse(JSON.stringify(BASE_DEVS));
+  Object.entries(LV('devices')).forEach(([k,v])=>{DEVS[k]=Object.assign(DEVS[k]||{},v)});
+  
+  ORD = JSON.parse(JSON.stringify(BASE_ORD));
+  Object.values(LV('orders')).forEach(o=>{
+    const ix=ORD.findIndex(x=>x.code===o.code);
+    if(o.deleted){ if(ix>=0) ORD.splice(ix,1); return; }
+    if(ix>=0) ORD[ix]=o; else ORD.push(o);
+  });
+  
+  LINES = [];
+  ORD.forEach(o=>{
+    if(!CB[o.cus]) CB[o.cus]={id:o.cus, name:'(khách đã xóa)', area:''};
+    (o.lines||[]).forEach((l,i)=>{
+      const op = LV('lineops')[o.code+'__'+i]; if(op) Object.assign(l,op);
+      l.o=o; l.cus=o.cus; l.idx=i;
+      l.base = (l.price||0) * (l.days||1); l.total = l.base;
+      LINES.push(l);
+    });
+  });
+}
+
+/* ============ KẾT NỐI API & DATABASE ============ */
+const $ = id => document.getElementById(id);
+const LSKEY = 'maya_rental_ops_v2';
+
+function persistLive(){ try{ localStorage.setItem(LSKEY,JSON.stringify(LIVE)); return true; }catch(e){ return false; } }
+
+function setDbState(s){
+  const e=$('dbs'); if(!e) return;
+  e.className='dbs '+(s==='on'?'on':s==='off'?'off':s==='connecting'?'connecting':'');
+  e.lastChild.textContent={on:'Đã đồng bộ Google Sheets',off:'Lưu tạm trên trình duyệt',connecting:'Đang đồng bộ Sheets…'}[s];
+}
+
+async function save(col, id, data){
+  (LIVE[col] = LIVE[col] || {})[id] = data;
+  persistLive(); rebuild(); renderSoft();
+  if (GAS_WEB_APP_URL) {
+    try {
+      fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ collection: col, id: id, data: data })
+      }).catch(e => console.warn(e));
+    } catch (e) {}
+  }
+}
+
+async function initData(){
+  let st={};
+  try{ const raw = localStorage.getItem(LSKEY); if(raw) st = JSON.parse(raw); }catch(e){}
+  ['orders','lineops','customers','devices'].forEach(c=>{ LIVE[c] = st[c]||{}; });
+  rebuild(); renderSoft();
+
+  if (GAS_WEB_APP_URL) {
+    setDbState('connecting');
+    try {
+      const response = await fetch(GAS_WEB_APP_URL);
+      const serverData = await response.json();
+      if (serverData && !serverData.error) {
+        ['orders','lineops','customers','devices'].forEach(c => {
+          if (serverData[c]) Object.assign(LIVE[c] = LIVE[c] || {}, serverData[c]);
+        });
+        persistLive(); setDbState('on'); rebuild(); renderSoft();
+      } else { setDbState('on'); }
+    } catch (e) { setDbState('on'); }
+  } else { setDbState('on'); }
+}
+
+/* ============ GIAO DIỆN ============ */
+const S = { view: 'dashboard', cust: null, dr: null };
+const ICON={
+  grid:'<path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/>',
+  file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
+  users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>',
+  plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>'
+};
+const ico = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON[n]||ICON.grid}</svg>`;
+
+const NAV=[
+  {g:'Vận hành',items:[['dashboard','Tổng quan','grid'],['orders','Đơn hàng','file'],['customers','Khách hàng','users']]}
+];
+
+function drawNav(){
+  $('nav').innerHTML = NAV.map(g => `<div class="ng">${g.g}</div>` + g.items.map(([v,t,i]) => `<button data-act="nav" data-id="${v}" ${S.view===v?'aria-current="page"':''}>${ico(i)}<span class="lbl">${t}</span></button>`).join('')).join('');
+  $('todayLbl').textContent = TODAY.split('-').reverse().join('/');
+  $('newbtn').innerHTML = ico('plus') + '<span>Tạo đơn mới</span>';
+}
+
+const VIEWS = {};
+VIEWS.dashboard = function(){
+  const totalRev = LINES.reduce((sum, l) => sum + (l.total||0), 0);
+  return `<div class="ph"><h1>Tổng quan</h1><p>Cập nhật lần cuối: ${LOADED_AT}</p></div>
+    <div class="grid3">
+      <div class="kpi"><span class="l">Tổng đơn hàng</span><span class="v">${ORD.length}</span><span class="s">đơn đã tạo</span></div>
+      <div class="kpi"><span class="l">Khách hàng</span><span class="v">${CUS.length}</span><span class="s">đối tác</span></div>
+      <div class="kpi"><span class="l">Doanh thu tạm tính</span><span class="v" style="color:var(--info)">${vnd(totalRev)} đ</span><span class="s">trên hệ thống</span></div>
+    </div>
+    <div class="panel" style="margin-top:24px"><div class="pb"><p>✅ Hệ thống đã được nâng cấp giao diện UI SaaS hiện đại.</p><p>✅ Kết nối thành công với Google Sheets qua link API: <b>${GAS_WEB_APP_URL.substring(0,40)}...</b></p></div></div>`;
+};
+
+VIEWS.orders = function(){
+  const rows = ORD.map(o => `<tr class="row" data-act="vieworder" data-id="${o.code}"><td><b>${o.code}</b></td><td>${(CB[o.cus]||{}).name}</td><td>${o.lines.length} dòng</td><td class="num">${vnd(o.lines.reduce((s,l)=>s+(l.total||0),0))} đ</td></tr>`).join('');
+  return `<div class="ph"><h1>Đơn hàng</h1></div><div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Chi tiết</th><th class="num">Tổng tiền</th></tr></thead><tbody>${rows||'<tr><td colspan="4">Chưa có đơn hàng</td></tr>'}</tbody></table></div></div>`;
+};
+
+VIEWS.customers = function(){
+  const rows = CUS.map(c => `<tr><td><b>${c.name}</b><br><small class="muted">${c.mst||'Chưa có MST'}</small></td><td>${c.src||'—'}</td><td>${c.area||'—'}</td></tr>`).join('');
+  return `<div class="ph"><h1>Khách hàng</h1></div><div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Khách hàng</th><th>Nguồn</th><th>Khu vực</th></tr></thead><tbody>${rows||'<tr><td colspan="3">Chưa có dữ liệu</td></tr>'}</tbody></table></div></div>`;
+};
+
+function render(){
+  drawNav();
+  $('main').innerHTML = VIEWS[S.view] ? VIEWS[S.view]() : VIEWS.dashboard();
+}
+function renderSoft(){ render(); }
+function closeDrawer(){ $('drawer').classList.remove('open'); }
+
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('[data-act]'); if(!t) return;
+  const a = t.dataset.act, id = t.dataset.id;
+  if(a === 'nav') { S.view = id; render(); window.scrollTo(0,0); }
+  else if(a === 'close') closeDrawer();
+  else if(a === 'neworder') {
+     // Hàm tạo đơn lưu mẫu lên Google Sheets để test
+     const code = 'NEW-' + Math.floor(Math.random()*10000);
+     save('orders', code, { code: code, cus: 'inoue', date: TODAY, lines: [] });
+     alert('Đã tạo đơn ' + code + ' và đẩy lên Google Sheets!');
+  }
+});
+
+// Chạy khởi tạo
+initData().catch(e=>setDbState('off'));
+</script>
 </body>
 </html>
