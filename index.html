@@ -1378,8 +1378,10 @@ function devDrawer(code){
     const ticks=[];let t=P(mn);t.setDate(1);t.setMonth(t.getMonth()+1);while(iso(t)<=mx){ticks.push(iso(t));t.setMonth(t.getMonth()+1)}
     g=`<div class="gantt"><div class="g-axis">${ticks.map(x=>`<span style="left:${pos(x)}%">${pad(P(x).getMonth()+1)}/${P(x).getFullYear()}</span>`).join('')}</div>
     <div class="g-today" style="left:calc(12px + (100% - 24px) * ${pos(TODAY)/100})"></div>
+    <div class="g-track" style="height:32px;margin-top:16px">
     ${ls.map(l=>{const st=lineState(l);const w=Math.max((dayDiff(l.s,l.e)+1)/T*100,1.5);const tone=st.k==='pending'?'info':st.k==='closed'?'mute':st.tone;
-      return `<div class="g-track"><span class="g-bar t-${tone}" style="left:${pos(l.s)}%;width:${w}%" title="${esc(CB[l.cus].name)} ${fmtD(l.s)} – ${fmtD(l.e)}">${esc(CB[l.cus].name)}</span></div>`}).join('')}</div>
+      return `<span class="g-bar t-${tone}" style="left:${pos(l.s)}%;width:${w}%;top:4px;height:24px;line-height:22px" title="${esc(CB[l.cus].name)} ${fmtD(l.s)} – ${fmtD(l.e)}">${esc(CB[l.cus].name)}</span>`}).join('')}
+    </div></div>
     <div class="sm muted" style="margin-top:6px">Đường đỏ là ngày ${fmtD(TODAY)}.${d.k==='hold'?' Máy đang được khách giữ liên tục, thanh kết thúc là hạn ghi trong đơn.':''}</div>`;
   }
   const ev=[];
